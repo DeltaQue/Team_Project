@@ -62,19 +62,19 @@ public class GameManager : MonoBehaviour
         //{
         //    ChangeDestination();
         //}
-
         Move(checkLever);
-        if (Input.GetKey(KeyCode.Q))
+        if (isStay && Input.GetKey(KeyCode.Q))
         {
             checkLever = true;
             if (Vector3.Distance(childTransform.localPosition, nextPos) <= 0.1)
             {
                 ChangeDestination();
+                checkLever = false;
             }
         }
-
         Raycasting();
 
+        Debug.DrawLine(new Vector3(0, 0, 0), new Vector3(0, 5, 0));
     }
 
     private void Move(bool flag)
@@ -98,51 +98,47 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    bool Raycasting()
+    void Raycasting()
     {
-        right_hit = Physics2D.Raycast(CastingVectex.transform.position, Vector2.right, 5f, 1 << LayerMask.NameToLayer("Room"));
-        left_hit = Physics2D.Raycast(CastingVectex.transform.position, Vector2.left, 5f, 1 << LayerMask.NameToLayer("Room"));
-        up_hit = Physics2D.Raycast(CastingVectex.transform.position, Vector2.up, 5f, 1 << LayerMask.NameToLayer("Room"));
-        down_hit = Physics2D.Raycast(CastingVectex.transform.position, Vector2.down, 5f, 1 << LayerMask.NameToLayer("Room"));
-
         if (isStay)
         {
-            if (right_hit.collider != null)
-            {
+            right_hit = Physics2D.Raycast(CastingVectex.transform.position + new Vector3(5, 0, 0), Vector2.right, 3f, 1 << LayerMask.NameToLayer("Room"));
+            Debug.DrawLine(CastingVectex.transform.position + new Vector3(5, 0, 0), new Vector3(8, 0, 0));
+
+            left_hit = Physics2D.Raycast(CastingVectex.transform.position + new Vector3(-5, 0, 0), Vector2.left, 3f, 1 << LayerMask.NameToLayer("Room"));
+            Debug.DrawLine(CastingVectex.transform.position + new Vector3(-5, 0, 0), new Vector3(-3, 0, 0));
+
+            up_hit = Physics2D.Raycast(CastingVectex.transform.position + new Vector3(0, 4, 0), Vector2.up, 5f, 1 << LayerMask.NameToLayer("Room"));
+            Debug.DrawLine(CastingVectex.transform.position + new Vector3(0, 4, 0), new Vector3(0, 9, 0));
+
+            down_hit = Physics2D.Raycast(CastingVectex.transform.position + new Vector3(0, -4, 0), Vector2.down, 5f, 1 << LayerMask.NameToLayer("Room"));
+            Debug.DrawLine(CastingVectex.transform.position + new Vector3(0, -4, 0), new Vector3(-9, 0, 0));
+
+            if (isStay && right_hit.collider == null)
                 Arrow_Right.SetActive(true);
-            }
             else
                 Arrow_Right.SetActive(false);
 
-            if (left_hit.collider != null)
-            {
+            if (isStay && left_hit.collider == null)
                 Arrow_Left.SetActive(true);
-            }
             else
                 Arrow_Left.SetActive(false);
 
-            if (up_hit.collider != null)
-            {
+            if (isStay && up_hit.collider == null)
                 Arrow_Up.SetActive(true);
-            }
             else
                 Arrow_Up.SetActive(false);
 
-            if (down_hit.collider != null)
-            {
+            if (isStay && down_hit.collider == null)
                 Arrow_Down.SetActive(true);
-            }
             else
                 Arrow_Down.SetActive(false);
-            return true;
         }
-        else
-            return false;
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if(collision.gameObject == Player)
+        if (collision.gameObject == Player)
         {
             isStay = true;
         }
