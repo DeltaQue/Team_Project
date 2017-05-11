@@ -73,6 +73,9 @@
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
+    <Reference Include="LitJson">
+      <HintPath>Assets\LitJson.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\2DDL\2DLight\AssetUtility\AssetUtility.cs" />
@@ -121,6 +124,7 @@
     <Compile Include="Assets\2DDL\Examples\__Examples_Scripts\CharacterController2D\CharacterController2D.cs" />
     <Compile Include="Assets\2DDL\Examples\__Examples_Scripts\restoreStone.cs" />
     <Compile Include="Assets\2DDL\Examples\__Examples_Scripts\rotate.cs" />
+    <Compile Include="Assets\Scripts\RayCasting.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\2DDL\2DLight\Shaders\CGTexturizing.shader" />
@@ -133,6 +137,7 @@
     <None Include="Assets\2DDL\2DLight\Shaders\StencilObject.shader" />
     <None Include="Assets\2DDL\2DLight\Shaders\VertexColor.shader" />
     <None Include="Assets\2DDL\Bugs\READ FIRST.txt" />
+    <None Include="Assets\EclipseTest.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
