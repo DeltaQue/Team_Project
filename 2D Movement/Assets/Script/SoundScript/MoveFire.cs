@@ -9,7 +9,7 @@ public class MoveFire: MonoBehaviour {
 	void Start () {
 		
 	}
-	
+	/*
 	// Update is called once per frame
 	void Update () {
         if (Input.GetKeyDown(KeyCode.A))
@@ -19,4 +19,5 @@ public class MoveFire: MonoBehaviour {
             SoundManager.instance.PlaySound(); //사운드매니저의 PlaySound 를 불러옵니다.
         }
 	}
+	*/
 }

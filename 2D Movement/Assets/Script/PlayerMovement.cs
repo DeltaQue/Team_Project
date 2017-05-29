@@ -10,9 +10,12 @@ using System;
 public class PlayerMovement : MonoBehaviour
 {
     //Character Movement
-    Animator anim;
+    Animator[] anim = new Animator[2];
     static Vector3 Hero;
     static Vector3 TeddyBear;
+    //0 : Hero,  1 : teddy
+    public GameObject[] Player = new GameObject[2];
+    private bool CharacterSwitch;
 
     //nextStage 
     static int nextSceneNum;
@@ -25,21 +28,26 @@ public class PlayerMovement : MonoBehaviour
     private string jsonString;
     private JsonData TextCommucation;
 
-    public float smoothing = 5f;
+    //Object Move
+    public float smoothing = 1f;
     public GameObject[] gObjectArray = new GameObject[2];
     private bool[] bObject = new bool[2];
+    public Transform[] ObjectDestination = new Transform[2];
+    
 
-    public bool Control;
+    void AWake(){
+		//Character initialize
+		Hero = Player[0].transform.position;
+		TeddyBear = Player[1].transform.position;
+
+        CharacterSwitch = true;
+    }
     // Use this for initialization
     void Start()
     {
-        ////Json Initialize
+        //Json Initialize
         jsonString = File.ReadAllText(Application.dataPath + "/Resources/ObjectInteraction.json");
         TextCommucation = JsonMapper.ToObject(jsonString);
-
-        //Character initialize
-        Hero = gameObject.transform.position;
-        TeddyBear = gameObject.transform.position;
 
         //nextScene Check
         if (nextSceneNum == 1)
@@ -52,12 +60,11 @@ public class PlayerMovement : MonoBehaviour
             nextSceneNum = 1;
             gameObject.transform.position = TeddyBear;
         }
-        anim = GetComponent<Animator>();
+        anim[0] = Player[0].GetComponent<Animator>();
+        anim[1] = Player[1].GetComponent<Animator>();
 
-        //Control = true  => 주인공
-        //Control = false => 곰인형
-        Control = true;
-        
+        bObject[0] = false;
+        bObject[1] = false;
     }
 
     // Update is called once per frame
@@ -66,15 +73,14 @@ public class PlayerMovement : MonoBehaviour
         //Level Character movemnet
         CharacterMovement();
 
-
         //next level move
         if (Input.GetKeyDown(KeyCode.Q))
         {
             //SceneManager.LoadScene(nextSceneNum, LoadSceneMode.Single);
-            if (Control == true)
-                Control = false;
-            else if (Control == false)
-                Control = true;
+            if (CharacterSwitch == true)
+                CharacterSwitch = false;
+            else
+                CharacterSwitch = true;
         }
 
         if (Input.GetKeyDown(KeyCode.Z))
@@ -82,7 +88,6 @@ public class PlayerMovement : MonoBehaviour
             rayCasting();
             ObjectMove();
         }
-        
     }
 
     //player move
@@ -111,13 +116,32 @@ public class PlayerMovement : MonoBehaviour
 
         bool isWalking = (Mathf.Abs(input_x) + Mathf.Abs(input_y)) > 0;
 
-        anim.SetBool("isWalking", isWalking);
+        if(CharacterSwitch == true)
+            anim[0].SetBool("isWalking", isWalking);
+        else if(CharacterSwitch == false)
+            anim[1].SetBool("isWalking", isWalking);
+
         if (isWalking)
         {
-            anim.SetFloat("x", input_x);
-            anim.SetFloat("y", input_y);
+            if (CharacterSwitch == true)
+            {
+                anim[0].SetFloat("x", input_x);
+                anim[0].SetFloat("y", input_y);
+            }
+            else if (CharacterSwitch == false)
+            {
+                anim[1].SetFloat("x", input_x);
+                anim[1].SetFloat("y", input_y);
+            }
 
-            transform.position += new Vector3(input_x, input_y, 0).normalized * Time.deltaTime;
+            if (CharacterSwitch == true)
+            {
+                Player[0].transform.position += new Vector3(input_x, input_y, 0).normalized * Time.deltaTime;
+            }
+            else if(CharacterSwitch == false)
+            {
+                Player[1].transform.position += new Vector3(input_x, input_y, 0).normalized * Time.deltaTime;
+            }
         }
 
         //nextStageLevel + 1(다음 스테이지 
@@ -134,9 +158,9 @@ public class PlayerMovement : MonoBehaviour
         //Layer가 Object인 오브젝트만 캐스팅
         if (_hit.collider != null)
         {
-            //Debug.Log(_hit.collider.name);
+            Debug.Log(_hit.collider.name);
             //RayCasting에 걸리는 오브젝트의 Layer가 Object이고, 태그가 KeyObject일 경우
-            if (_hit.collider.tag == "KeyObject")
+            if(_hit.collider.tag == "KeyObject")
             {
 
             }
@@ -149,11 +173,9 @@ public class PlayerMovement : MonoBehaviour
 
             for (int i = 0; i < 2; i++)
             {
-                if ((string)TextCommucation["Object"][i]["id"] == _hit.collider.name && gObjectArray[i].name == _hit.collider.name)
+                if ((string)TextCommucation["Object"][i]["id"] == _hit.collider.name)
                 {
                     Debug.Log(TextCommucation["Object"][i]["interaction"]);
-                    //gObjectArray[i].transform.position = Vector3.Lerp(gObjectArray[i].transform.position, new Vector3(gObjectArray[i].transform.position.x + 1, gObjectArray[i].transform.position.y + 1, gObjectArray[i].transform.position.z), smoothing * Time.deltaTime);
-                    //StartCoroutine(MyCoroutine(gObjectArray[i].transform));
                     bObject[i] = true;
                 }
             }
@@ -162,28 +184,36 @@ public class PlayerMovement : MonoBehaviour
 
     private void ObjectMove()
     {
+        // 0 : Door
         if (bObject[0] == true)
         {
-            gObjectArray[0].transform.position = Vector3.Lerp(gObjectArray[0].transform.position, new Vector3(gObjectArray[0].transform.position.x + 1, gObjectArray[0].transform.position.y + 1, gObjectArray[0].transform.position.z), smoothing * Time.deltaTime);
+            StartCoroutine(MyCoroutine(gObjectArray[0].transform, 0));
         }
+        // 1 : Key
         if (bObject[1] == true)
         {
-            gObjectArray[1].transform.position = Vector3.Lerp(gObjectArray[1].transform.position, new Vector3(gObjectArray[1].transform.position.x + 1, gObjectArray[1].transform.position.y + 1, gObjectArray[1].transform.position.z), smoothing * Time.deltaTime);
-            // StartCoroutine(MyCoroutine(gObjectArray[1].transform));
-            bObject[1] = false;
+            StartCoroutine(MyCoroutine(gObjectArray[1].transform, 1));
         }
     }
 
-    IEnumerator MyCoroutine(Transform target)
+    IEnumerator MyCoroutine(Transform target, int array)
     {
-        Transform destination = target.transform;
-        destination.position += new Vector3(1, 0, 0);
 
-        //while (Vector3.Distance(target.position, destination.position) > 0.05f)
-        //{
-            target.transform.position = Vector3.Lerp(target.position, destination.position , smoothing * Time.deltaTime);
-        
-            yield return new WaitForSeconds(5f);
-        //}
+        while (Vector3.Distance(target.position, ObjectDestination[array].position) > 0.05f)
+        {
+            target.transform.position = Vector3.Lerp(target.position, ObjectDestination[array].position, smoothing * Time.deltaTime);
+
+            yield return null;
+        }
+    }
+
+    void Activate()
+    {
+        CharacterSwitch = true;
+    }
+
+    void Deactivate()
+    {
+        CharacterSwitch = false;
     }
 }

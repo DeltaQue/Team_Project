@@ -82,6 +82,7 @@
     <Compile Include="Assets\Script\GameManager.cs" />
     <Compile Include="Assets\Script\PlayerMovement.cs" />
     <Compile Include="Assets\Script\RayCasting.cs" />
+    <Compile Include="Assets\Script\SoundScript\DontDestoy.cs" />
     <Compile Include="Assets\Script\SoundScript\MoveFire.cs" />
     <Compile Include="Assets\Script\SoundScript\SoundManager.cs" />
     <Compile Include="Assets\Script\SoundScript\Trigger.cs" />

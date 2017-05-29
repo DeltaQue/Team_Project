@@ -1,12 +1,10 @@
 fileFormatVersion: 2
 guid: e51899e837c135b439b298217939f4cc
-timeCreated: 1495077717
+timeCreated: 1495073896
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences:
-  - SoundGun: {instanceID: 0}
-  - SoundExplosion: {instanceID: 0}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

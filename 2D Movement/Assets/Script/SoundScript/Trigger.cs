@@ -9,7 +9,7 @@ public class Trigger : MonoBehaviour {
         if (col.tag == "enemy")
         {
             Destroy(col.gameObject);
-			SoundManager.instance.PlaySound2();
+			//SoundManager.instance.PlaySound2();
         }
     }
 }

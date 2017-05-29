@@ -124,7 +124,7 @@
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
  </Reference>
  <Reference Include="LitJson">
- <HintPath>C:/Users/Ritz/Documents/GitHub/Team_Project/Team_Project-master/Team_Project-master/2D Movement/Assets/LitJson.dll</HintPath>
+ <HintPath>C:/Users/Ritz/Documents/GitHub/Team_Project/Team_Project-master/2D Movement/Assets/LitJson.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Graphs">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
